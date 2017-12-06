@@ -252,7 +252,7 @@ namespace :data do
 
     desc "Display status of data migrations"
     task :status => :environment do
-      config = ActiveRecord::Base.configurations[Rails.env || 'development']
+      config = ActiveRecord::Base.configurations[Rails.env || 'development'] || ENV['DATABASE_URL']
       ActiveRecord::Base.establish_connection(config)
       unless ActiveRecord::Base.connection.table_exists?(DataMigrate::DataMigrator.schema_migrations_table_name)
         puts 'Data migrations table does not exist yet.'
@@ -329,7 +329,7 @@ def sort_string migration
 end
 
 def connect_to_database
-  config = ActiveRecord::Base.configurations[Rails.env || 'development']
+  config = ActiveRecord::Base.configurations[Rails.env || 'development'] || ENV['DATABASE_URL']
   ActiveRecord::Base.establish_connection(config)
 
   unless ActiveRecord::Base.connection.table_exists?(DataMigrate::DataMigrator.schema_migrations_table_name)
